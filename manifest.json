@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Floating Control Window Extension",
+  "version": "1.0",
+  "description": "An example extension with a floating control window.",
+  "permissions": [
+    "windows"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "Open Control Window"
+  }
+}
