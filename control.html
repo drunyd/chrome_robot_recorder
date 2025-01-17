@@ -9,8 +9,16 @@
 <body>
   <div id="container">
     <h1>Control Window</h1>
-    <p>This is a floating control window.</p>
-    <button id="action-button">Click Me</button>
+    <div id="recording-section" class="section">
+      <h2>Recording Section</h2>
+      <button id="start-stop-button" class="start">Start</button>
+      <button id="pause-button" class="pause" disabled>Pause</button>
+    </div>
+
+    <div id="script-section" class="section">
+      <h2>Script</h2>
+      <textarea id="script-area" readonly></textarea>
+    </div>
   </div>
   <script src="control.js"></script>
 </body>
