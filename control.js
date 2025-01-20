@@ -1,42 +1,42 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // Select buttons and script area
-  const startStopButton = document.getElementById("start-stop-button");
-  const pauseButton = document.getElementById("pause-button");
-  const scriptArea = document.getElementById("script-area");
+// Function to send a message to all tabs with the content script
+function sendMessageToContentScript(message) {
+  // Query all tabs in the browser
+  chrome.tabs.query({}, (tabs) => {
+    tabs.forEach((tab) => {
+      chrome.tabs.sendMessage(tab.id, message, (response) => {
+        if (chrome.runtime.lastError) {
+          console.error(`Error sending message to tab ${tab.id}:`, chrome.runtime.lastError.message);
+        } else if (response) {
+          console.log(`Response from tab ${tab.id}:`, response);
+        }
+      });
+    });
+  });
+}
 
-  // Button State
-  let isRecording = false;
 
-  // Helper function to append logs (no timestamp)
-  function appendLog(message) {
-    scriptArea.value += message + "\n";
-    scriptArea.scrollTop = scriptArea.scrollHeight; // Auto-scroll to the bottom
+// Handle the start/stop button
+document.getElementById("start-stop-btn").addEventListener("click", function() {
+  const button = this;
+  if (button.classList.contains("start")) {
+    button.textContent = "Stop";
+    button.classList.remove("start");
+    button.classList.add("stop");
+    // chrome.runtime.sendMessage({ action: "startRecording" });
+    sendMessageToContentScript({action: "startRecording"})
+    console.log("started rec. controljs")
+  } else {
+    button.textContent = "Start";
+    button.classList.remove("stop");
+    button.classList.add("start");
+    chrome.runtime.sendMessage({ action: "stopRecording" });
+    console.log("stopped rec. controljs")
   }
+});
 
-  // Example: Log initial content
-  appendLog("Script initialized.");
 
-  // Handle Start/Stop Button
-  startStopButton.addEventListener("click", () => {
-    isRecording = !isRecording;
-
-    if (isRecording) {
-      startStopButton.textContent = "Stop";
-      startStopButton.classList.remove("start");
-      startStopButton.classList.add("stop");
-      pauseButton.disabled = false; // Enable pause button when recording starts
-      appendLog("Recording started.");
-    } else {
-      startStopButton.textContent = "Start";
-      startStopButton.classList.remove("stop");
-      startStopButton.classList.add("start");
-      pauseButton.disabled = true; // Disable pause button when recording stops
-      appendLog("Recording stopped.");
-    }
-  });
-
-  // Handle Pause Button
-  pauseButton.addEventListener("click", () => {
-    appendLog("Recording paused (functionality to be added).");
-  });
+// Handle the clear button to clear the recorded actions
+document.getElementById("clear-btn").addEventListener("click", function() {
+  chrome.runtime.sendMessage({ action: "clearRecordedActions" });
+  scriptArea.value = ""; // Clear the textarea
 });

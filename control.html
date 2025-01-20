@@ -3,23 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Floating Control Window</title>
+  <title>Plugin Controller</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div id="container">
-    <h1>Control Window</h1>
-    <div id="recording-section" class="section">
-      <h2>Recording Section</h2>
-      <button id="start-stop-button" class="start">Start</button>
-      <button id="pause-button" class="pause" disabled>Pause</button>
+  <div class="container">
+    <!-- Controls Section -->
+    <div class="controls">
+      <button id="start-stop-btn" class="start">Start</button>
+      <button id="clear-btn">Clear</button>
     </div>
-
-    <div id="script-section" class="section">
-      <h2>Script</h2>
-      <textarea id="script-area" readonly></textarea>
+    
+    <!-- Actions List Section -->
+    <div id="actions-list" class="actions-list">
+      <!-- Recorded actions will be added here dynamically -->
+    </div>
+    
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <span id="status-message">Ready</span>
     </div>
   </div>
+
   <script src="control.js"></script>
 </body>
 </html>

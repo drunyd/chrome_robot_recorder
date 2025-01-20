@@ -4,7 +4,10 @@
   "version": "1.0",
   "description": "An example extension with a floating control window.",
   "permissions": [
-    "windows"
+    "tabs",
+    "activeTab",
+    "storage",
+    "scripting"
   ],
   "background": {
     "service_worker": "background.js"
@@ -16,5 +19,19 @@
       "128": "icon.png"
     },
     "default_title": "Open Control Window"
-  }
+  },
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "content.js"
+      ]
+    }
+  ]
 }
