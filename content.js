@@ -120,6 +120,7 @@ document.addEventListener('click', (event) => {
     action: 'clickCaptured',
     details: {
       tagName: target.tagName,
+      name: target.name,
       id: target.id,
       classes: Array.from(target.classList),
       textContent: target.textContent.trim(),
@@ -152,6 +153,7 @@ document.addEventListener('input', (event) => {
         action: 'inputCaptured',
         details: {
           tagName: target.tagName,
+          name: target.name,
           id: target.id,
           classes: Array.from(target.classList),
           value: target.value,
