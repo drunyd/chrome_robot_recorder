@@ -72,9 +72,10 @@ button:active {
 
 /* Command text (Click Element, Input Text, etc.) */
 .actions-list .action-item span {
-  font-size: 16px;
-  color: #0056b3; /* Darker blue for command text */
+  font-size: 75%; /* Reduce font size to 75% */
+  color: #ffffff; /* Darker blue for command text */
   margin-right: 10px;
+  font-family: 'Courier New', Courier, monospace; /* Monospace font */
 }
 
 /* Delete button styles */

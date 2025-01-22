@@ -1,4 +1,4 @@
-import { setupMessaging } from './background/messaging.js';
+import { setupMessaging } from './js/background/messaging.js';
 
 // Initialize the extension
 setupMessaging();
