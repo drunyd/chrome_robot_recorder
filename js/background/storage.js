@@ -1,5 +1,11 @@
 const eventStore = {}; // Stores events with unique IDs as top-level keys
 const commandQueue = []; // Stores commands in the order they were captured
+export let recording = false;
+
+
+export function setRecordingStatus(status) {
+  recording = status;
+}
 
 export function storeEvent(message) {
   const { action, details } = message;

@@ -1,5 +1,11 @@
 let recording = false;
 
+console.log('Contentjs asking for recording status...')
+chrome.runtime.sendMessage({ action: 'getRecordingStatus' }, (response) => {
+  // Set the recording status based on the response
+  recording = response.recording;
+  console.log(`Recording status set to: ${recording}`);
+});
 
 // Listen for messages sent from the background script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {

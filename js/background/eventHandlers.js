@@ -1,4 +1,4 @@
-import { storeEvent, deleteCommand, eventStore, commandQueue } from './storage.js';
+import { storeEvent, deleteCommand, eventStore, commandQueue, setRecordingStatus, recording } from './storage.js';
 import { createClickCommand, createInputCommand } from './commands.js';
 
 export function handleMessage(message, sender) {
@@ -19,6 +19,13 @@ export function handleMessage(message, sender) {
 
     case 'exportDataRequest':
       return { data: { eventStore, commandQueue } };
+
+    case 'getRecordingStatus':
+      return { recording: recording };
+
+    case 'updateRecordingStatus':
+      setRecordingStatus(message.recording);
+      return null;
 
     default:
       console.warn(`Unknown action: ${message.action}`);

@@ -3,19 +3,24 @@ import { sendMessageToContentScript } from './messaging.js';
 // Handle the start/stop button
 export function startStopButtonHandler() {
   const button = document.getElementById("start-stop-btn");
+
   if (button.classList.contains("start")) {
     button.textContent = "Stop";
     button.classList.remove("start");
     button.classList.add("stop");
     sendMessageToContentScript({ action: "startRecording" });
+    chrome.runtime.sendMessage({ action: 'updateRecordingStatus', recording: true });
     console.log("Recording started.");
   } else {
     button.textContent = "Start";
     button.classList.remove("stop");
     button.classList.add("start");
     sendMessageToContentScript({ action: "stopRecording" });
+    chrome.runtime.sendMessage({ action: 'updateRecordingStatus', recording: false });
     console.log("Recording stopped.");
   }
+
+  // Send a message to the background script with the new recording status
 }
 
 // Handle the clear button to clear the recorded actions
