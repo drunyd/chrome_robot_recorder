@@ -23,7 +23,7 @@ document.getElementById("start-stop-btn").addEventListener("click", function() {
     button.classList.remove("start");
     button.classList.add("stop");
     // chrome.runtime.sendMessage({ action: "startRecording" });
-    sendMessageToContentScript({action: "startRecording"})
+    sendMessageToContentScript({ action: "startRecording" })
     console.log("started rec. controljs")
   } else {
     button.textContent = "Start";
@@ -33,6 +33,59 @@ document.getElementById("start-stop-btn").addEventListener("click", function() {
     console.log("stopped rec. controljs")
   }
 });
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'updateActionsList') {
+    const { command, event, uniqueName, index } = message;
+    updateActionsList(command, event, uniqueName, index);
+  }
+});
+// Function to update the actions list on control.html
+function updateActionsList(command, event, uniqueName, index) {
+  const actionsList = document.getElementById('actions-list');
+
+  // Create a new element for this action
+  const actionItem = document.createElement('div');
+  actionItem.classList.add('action-item');
+  actionItem.setAttribute('data-unique-name', uniqueName);
+  actionItem.setAttribute('data-index', index); // Store the index in the element
+
+  // Determine if the action is a "Click Element" or "Input Text"
+  let commandText = command;
+
+  // Add the command text to the new item
+  const commandElement = document.createElement('span');
+  commandElement.textContent = commandText;
+  actionItem.appendChild(commandElement);
+
+  // Create a delete button
+  const deleteButton = document.createElement('button');
+  deleteButton.textContent = 'X';
+  deleteButton.classList.add('delete-btn');
+
+  deleteButton.addEventListener('click', () => {
+    const commandIndex = actionItem.getAttribute('data-index'); // Get the stored index
+    chrome.runtime.sendMessage({
+      action: 'deleteCommand',
+      index: parseInt(commandIndex, 10) // Send the index for deletion
+    });
+
+    // Remove the action item from the control panel UI
+    actionItem.remove();
+
+    // Adjust the data-index of the following items to ensure consistency
+    const remainingItems = document.querySelectorAll('.action-item');
+    remainingItems.forEach((item, index) => {
+      // Update the data-index attribute to reflect the new order
+      item.setAttribute('data-index', index);
+    });
+  });
+
+
+  actionItem.appendChild(deleteButton);
+
+  // Append the action item to the actions list
+  actionsList.appendChild(actionItem);
+}
 
 
 // Handle the clear button to clear the recorded actions

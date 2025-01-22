@@ -9,11 +9,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'startRecording') {
     recording = true;
     console.log("Recording started")
-  } 
+  }
   if (message.action === 'stopRecording') {
     recording = false;
     console.log("Recording stopped")
-  } 
+  }
 
   // Indicate if you want to keep the response channel open for asynchronous responses
   return true; // Return true if you plan to send an asynchronous response
@@ -102,7 +102,7 @@ function generateOptimizedCSSSelector(element) {
 // Add event listener for all clicks on the page
 document.addEventListener('click', (event) => {
   const target = event.target;
-// Generate optimized locators
+  // Generate optimized locators
   const optimizedXPath = generateOptimizedXPath(target);
   const optimizedCSSSelector = generateOptimizedCSSSelector(target);
 
@@ -116,18 +116,18 @@ document.addEventListener('click', (event) => {
 
   // Optionally send the click event details to the background script or control panel
   if (recording) {
-  chrome.runtime.sendMessage({
-    action: 'clickCaptured',
-    details: {
-      tagName: target.tagName,
-      name: target.name,
-      id: target.id,
-      classes: Array.from(target.classList),
-      textContent: target.textContent.trim(),
- xpath: optimizedXPath,
-      cssSelector: optimizedCSSSelector,
-    },
-  });
+    chrome.runtime.sendMessage({
+      action: 'clickCaptured',
+      details: {
+        tagName: target.tagName,
+        name: target.name,
+        id: target.id,
+        classes: Array.from(target.classList),
+        textContent: target.textContent.trim(),
+        xpath: optimizedXPath,
+        cssSelector: optimizedCSSSelector,
+      },
+    });
   }
 });
 
@@ -135,7 +135,7 @@ let inputTimeout;
 
 document.addEventListener('input', (event) => {
   const target = event.target;
-// Generate optimized locators
+  // Generate optimized locators
   const optimizedXPath = generateOptimizedXPath(target);
   const optimizedCSSSelector = generateOptimizedCSSSelector(target);
 
@@ -148,19 +148,19 @@ document.addEventListener('input', (event) => {
       console.log('Final input value:', target.value);
 
       // Optionally send the value to the background script
-  if (recording) {
-      chrome.runtime.sendMessage({
-        action: 'inputCaptured',
-        details: {
-          tagName: target.tagName,
-          name: target.name,
-          id: target.id,
-          classes: Array.from(target.classList),
-          value: target.value,
- xpath: optimizedXPath,
-      cssSelector: optimizedCSSSelector,
-        },
-      });
+      if (recording) {
+        chrome.runtime.sendMessage({
+          action: 'inputCaptured',
+          details: {
+            tagName: target.tagName,
+            name: target.name,
+            id: target.id,
+            classes: Array.from(target.classList),
+            value: target.value,
+            xpath: optimizedXPath,
+            cssSelector: optimizedCSSSelector,
+          },
+        });
       }
     }, 1000); // Adjust delay as needed
   }
