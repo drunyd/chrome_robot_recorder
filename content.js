@@ -1,31 +1,98 @@
+// ==============================
+// Recording Status Initialization
+// ==============================
 let recording = false;
 
-console.log('Contentjs asking for recording status...')
+console.log('Contentjs asking for recording status...');
 chrome.runtime.sendMessage({ action: 'getRecordingStatus' }, (response) => {
   // Set the recording status based on the response
   recording = response.recording;
   console.log(`Recording status set to: ${recording}`);
 });
 
-// Listen for messages sent from the background script
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+// ==============================
+// Message Listener from Background Script
+// ==============================
+chrome.runtime.onMessage.addListener((message) => {
   console.log('Message received in content script:', message);
 
   // Check the message content and act accordingly
   if (message.action === 'startRecording') {
     recording = true;
-    console.log("Recording started")
+    console.log("Recording started");
   }
   if (message.action === 'stopRecording') {
     recording = false;
-    console.log("Recording stopped")
+    console.log("Recording stopped");
   }
 
   // Indicate if you want to keep the response channel open for asynchronous responses
   return true; // Return true if you plan to send an asynchronous response
 });
 
+// ==============================
+// Event Handlers
+// ==============================
 
+// Add event listener for all clicks on the page
+document.addEventListener('click', (event) => {
+  const target = event.target;
+
+  // Log the click details
+  console.log('Click event captured:', target.tagName);
+
+  // Optionally send the click event details to the background script or control panel
+  if (recording) {
+    sendMessage('clickCaptured', target);
+  }
+});
+
+let inputTimeout;
+
+document.addEventListener('input', (event) => {
+  const target = event.target;
+
+  // Only capture input for text fields or text areas
+  if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
+    clearTimeout(inputTimeout);
+
+    // Set a timeout to wait for the user to stop typing
+    inputTimeout = setTimeout(() => {
+      console.log('Final input value:', target.value);
+
+      // Optionally send the value to the background script
+      if (recording) {
+        sendMessage('inputCaptured', target);
+      }
+    }, 1000); // Adjust delay as needed
+  }
+});
+
+// ==============================
+// Utility Functions
+// ==============================
+
+function sendMessage(action, target) {
+  const optimizedXPath = generateOptimizedXPath(target);
+  const optimizedCSSSelector = generateOptimizedCSSSelector(target);
+
+  chrome.runtime.sendMessage({
+    action: action,
+    details: {
+      tagName: target.tagName,
+      name: target.name,
+      id: target.id,
+      classes: Array.from(target.classList),
+      textContent: target.textContent.trim(),
+      xpath: optimizedXPath,
+      cssSelector: optimizedCSSSelector,
+    },
+  });
+}
+
+// ==============================
+// XPath Generator
+// ==============================
 
 function generateOptimizedXPath(element) {
   if (!element || element.nodeType !== Node.ELEMENT_NODE) {
@@ -64,6 +131,9 @@ function generateOptimizedXPath(element) {
   return `//${parts.join('/')}`;
 }
 
+// ==============================
+// CSS Selector Generator
+// ==============================
 
 function generateOptimizedCSSSelector(element) {
   if (!element || element.nodeType !== Node.ELEMENT_NODE) {
@@ -102,73 +172,3 @@ function generateOptimizedCSSSelector(element) {
   // Join the parts to create the CSS selector
   return parts.join(' > ');
 }
-
-
-
-// Add event listener for all clicks on the page
-document.addEventListener('click', (event) => {
-  const target = event.target;
-  // Generate optimized locators
-  const optimizedXPath = generateOptimizedXPath(target);
-  const optimizedCSSSelector = generateOptimizedCSSSelector(target);
-
-  // Log the click details
-  console.log('Click event captured:', {
-    tagName: target.tagName,
-    id: target.id,
-    classes: target.classList.toString(),
-    textContent: target.textContent.trim(),
-  });
-
-  // Optionally send the click event details to the background script or control panel
-  if (recording) {
-    chrome.runtime.sendMessage({
-      action: 'clickCaptured',
-      details: {
-        tagName: target.tagName,
-        name: target.name,
-        id: target.id,
-        classes: Array.from(target.classList),
-        textContent: target.textContent.trim(),
-        xpath: optimizedXPath,
-        cssSelector: optimizedCSSSelector,
-      },
-    });
-  }
-});
-
-let inputTimeout;
-
-document.addEventListener('input', (event) => {
-  const target = event.target;
-  // Generate optimized locators
-  const optimizedXPath = generateOptimizedXPath(target);
-  const optimizedCSSSelector = generateOptimizedCSSSelector(target);
-
-  // Only capture input for text fields or text areas
-  if (['INPUT', 'TEXTAREA'].includes(target.tagName)) {
-    clearTimeout(inputTimeout);
-
-    // Set a timeout to wait for the user to stop typing
-    inputTimeout = setTimeout(() => {
-      console.log('Final input value:', target.value);
-
-      // Optionally send the value to the background script
-      if (recording) {
-        chrome.runtime.sendMessage({
-          action: 'inputCaptured',
-          details: {
-            tagName: target.tagName,
-            name: target.name,
-            id: target.id,
-            classes: Array.from(target.classList),
-            value: target.value,
-            xpath: optimizedXPath,
-            cssSelector: optimizedCSSSelector,
-          },
-        });
-      }
-    }, 1000); // Adjust delay as needed
-  }
-});
-
