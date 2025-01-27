@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Floating Control Window Extension",
+  "name": "RobotFramework Recorder",
   "version": "1.0",
-  "description": "An example extension with a floating control window.",
+  "description": "Plugin to record locators and events - to refine with RobotFramework later",
   "permissions": [
     "tabs",
     "activeTab",

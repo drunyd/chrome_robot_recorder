@@ -38,13 +38,14 @@ chrome.runtime.onMessage.addListener((message) => {
 document.addEventListener('click', (event) => {
   const target = event.target;
 
-  // Log the click details
-  console.log('Click event captured:', target.tagName);
+  // Log all properties of the target element
+  console.log('Click event captured:', target);
 
   // Optionally send the click event details to the background script or control panel
   if (recording) {
     sendMessage('clickCaptured', target);
   }
+
 });
 
 let inputTimeout;
@@ -72,9 +73,22 @@ document.addEventListener('input', (event) => {
 // Utility Functions
 // ==============================
 
+
 function sendMessage(action, target) {
   const optimizedXPath = generateOptimizedXPath(target);
   const optimizedCSSSelector = generateOptimizedCSSSelector(target);
+  let choosenValue = null;
+
+  let optimizedNameSelector = null;
+
+  if (target.name) {
+    optimizedNameSelector = `xpath=${target.tagName.toLowerCase()}[contains(@name,"${target.name}")]`;
+  }
+
+
+  if (target.tagName === 'SELECT') {
+    choosenValue = target.value;
+  }
 
   chrome.runtime.sendMessage({
     action: action,
@@ -86,6 +100,8 @@ function sendMessage(action, target) {
       textContent: target.textContent.trim(),
       xpath: optimizedXPath,
       cssSelector: optimizedCSSSelector,
+      nameSelector: optimizedNameSelector,
+      choosenValue: choosenValue,
     },
   });
 }
