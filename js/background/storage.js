@@ -17,8 +17,9 @@ export function storeEvent(message) {
       cssSelector: details.cssSelector,
       value: action === 'inputCaptured' ? details.value : null,
       name: details.name,
+      nameSelector: details.nameSelector,
     };
-    console.log(`${action} event stored:`, eventStore[uniqueName]);
+    console.log(`${action} element stored:`, eventStore[uniqueName]);
   }
 }
 
