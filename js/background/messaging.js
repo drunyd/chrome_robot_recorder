@@ -1,6 +1,6 @@
 import { handleMessage } from './eventHandlers.js';
 
-export function setupMessaging() {
+xport function setupMessaging() {
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     try {
       const result = handleMessage(message, sender);

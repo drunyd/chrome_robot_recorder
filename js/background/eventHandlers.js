@@ -1,4 +1,6 @@
-import { storeEvent, deleteCommand, eventStore, commandQueue, setRecordingStatus, recording } from './storage.js';
+import { deleteCommand, commandQueue } from './CommandQueue.js';
+import { storeEvent, eventStore } from './EventStore.js';
+import { setRecordingStatus, recording } from './storage.js';
 import { createClickCommand, createInputCommand } from './commands.js';
 
 export function handleMessage(message, sender) {

@@ -1,4 +1,4 @@
-import { addCommand } from './storage.js';
+import { addCommand } from './CommandQueue.js';
 
 export function createClickCommand(message) {
   const { details } = message;
