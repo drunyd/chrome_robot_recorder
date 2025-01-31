@@ -1,4 +1,5 @@
 import { sendMessageToContentScript } from './messaging.js';
+import StatusUpdater from './statusUpdater.js';
 
 // Handle the start/stop button
 export function startStopButtonHandler() {
@@ -9,6 +10,7 @@ export function startStopButtonHandler() {
     button.classList.remove("start");
     button.classList.add("stop");
     sendMessageToContentScript({ action: "startRecording" });
+    StatusUpdater.updateStatus("Recording...");
     chrome.runtime.sendMessage({ action: 'updateRecordingStatus', recording: true });
     console.log("Recording started.");
   } else {
@@ -18,6 +20,7 @@ export function startStopButtonHandler() {
     sendMessageToContentScript({ action: "stopRecording" });
     chrome.runtime.sendMessage({ action: 'updateRecordingStatus', recording: false });
     console.log("Recording stopped.");
+    StatusUpdater.updateStatus("Recording stopped.");
   }
 
   // Send a message to the background script with the new recording status
@@ -32,6 +35,7 @@ export function clearButtonHandler() {
 
 // Handle the export button
 export function exportButtonHandler() {
+  StatusUpdater.updateStatus("Exporting locators and commands...");
   chrome.runtime.sendMessage({ action: 'exportDataRequest' }, (response) => {
     const locatorStore = response.data.locatorStore;
     const commandQueue = response.data.commandQueue;
@@ -41,6 +45,7 @@ export function exportButtonHandler() {
 
     createDownloadLink(yamlOutput, 'locators.yaml', 'text/yaml');
     createDownloadLink(commandOutput, 'commands.txt', 'text/plain');
+    StatusUpdater.updateStatus("Export done.");
   });
 }
 
