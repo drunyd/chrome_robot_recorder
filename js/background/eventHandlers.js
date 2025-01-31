@@ -1,6 +1,6 @@
 import { deleteCommand, commandQueue } from './CommandQueue.js';
-import { storeEvent, eventStore } from './EventStore.js';
-import { setRecordingStatus, recording } from './storage.js';
+import { storeEvent, locatorStore } from './LocatorStore.js';
+import { setRecordingStatus, recording } from './RecordingStatus.js';
 import { createClickCommand, createInputCommand } from './commands.js';
 
 export function handleMessage(message, sender) {
@@ -20,7 +20,7 @@ export function handleMessage(message, sender) {
       return { success: true };
 
     case 'exportDataRequest':
-      return { data: { eventStore, commandQueue } };
+      return { data: { locatorStore, commandQueue } };
 
     case 'getRecordingStatus':
       return { recording: recording };

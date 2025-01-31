@@ -1,18 +1,18 @@
-const eventStore = {}; // Stores events with unique IDs as top-level keys
+export const locatorStore = {}; // Stores events with unique IDs as top-level keys
 
 export function storeEvent(message) {
   const { action, details } = message;
   const uniqueName = generateUniqueName(details);
 
-  if (!eventStore[uniqueName]) {
-    eventStore[uniqueName] = {
+  if (!locatorStore[uniqueName]) {
+    locatorStore[uniqueName] = {
       xpath: details.xpath,
       cssSelector: details.cssSelector,
       value: action === 'inputCaptured' ? details.value : null,
       name: details.name,
       nameSelector: details.nameSelector,
     };
-    console.log(`${action} element stored:`, eventStore[uniqueName]);
+    console.log(`${action} element stored:`, locatorStore[uniqueName]);
   }
 }
 
@@ -21,4 +21,3 @@ function generateUniqueName(details) {
   return `${details.tagName}_${details.name || details.id || details.class}`;
 }
 
-export { eventStore };

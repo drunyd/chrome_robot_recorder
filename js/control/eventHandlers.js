@@ -33,13 +33,13 @@ export function clearButtonHandler() {
 // Handle the export button
 export function exportButtonHandler() {
   chrome.runtime.sendMessage({ action: 'exportDataRequest' }, (response) => {
-    const eventStore = response.data.eventStore;
+    const locatorStore = response.data.locatorStore;
     const commandQueue = response.data.commandQueue;
 
-    const yamlOutput = convertEventsToYAML(eventStore);
+    const yamlOutput = convertEventsToYAML(locatorStore);
     const commandOutput = exportCommandsToText(commandQueue);
 
-    createDownloadLink(yamlOutput, 'events.yaml', 'text/yaml');
+    createDownloadLink(yamlOutput, 'locators.yaml', 'text/yaml');
     createDownloadLink(commandOutput, 'commands.txt', 'text/plain');
   });
 }
@@ -52,8 +52,8 @@ function createDownloadLink(content, filename, type) {
   link.click();
 }
 
-function convertEventsToYAML(eventStore) {
-  return jsyaml.dump(eventStore);
+function convertEventsToYAML(locatorStore) {
+  return jsyaml.dump(locatorStore);
 }
 
 function exportCommandsToText(commandQueue) {
