@@ -102,6 +102,7 @@ function sendMessage(action, target) {
       cssSelector: optimizedCSSSelector,
       nameSelector: optimizedNameSelector,
       choosenValue: choosenValue,
+      value: target.value,
     },
   });
 }

@@ -1,5 +1,6 @@
 import { startStopButtonHandler, clearButtonHandler, exportButtonHandler } from './eventHandlers.js';
 import { updateActionsList } from './actions.js';
+import StatusUpdater from './statusUpdater.js';
 
 // Initialize the control panel
 function initializeControlPanel() {
@@ -13,8 +14,12 @@ function initializeControlPanel() {
       const { command, event, uniqueName, index } = message;
       updateActionsList(command, event, uniqueName, index);
     }
+    if (message.action === 'newstatus') {
+      StatusUpdater.updateStatus(message.message);
+    }
   });
 }
 
 // Start the control panel initialization
 initializeControlPanel();
+
