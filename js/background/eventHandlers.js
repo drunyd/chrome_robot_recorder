@@ -1,8 +1,8 @@
-import { deleteCommand, commandQueue } from './CommandQueue.js';
-import { storeEvent, locatorStore } from './LocatorStore.js';
-import { setRecordingStatus, recording } from './RecordingStatus.js';
+import { deleteCommand, commandQueue } from './stores/CommandQueue.js';
+import { storeEvent, locatorStore } from './stores/LocatorStore.js';
+import { setRecordingStatus, recording } from './utils/RecordingStatus.js';
+import { sendStatus } from './utils/StatusSender.js';
 import { createClickCommand, createInputCommand } from './commands.js';
-import { sendStatus } from './StatusSender.js';
 
 export function handleMessage(message, sender) {
   switch (message.action) {
