@@ -43,7 +43,7 @@ document.addEventListener('click', (event) => {
 
   // Optionally send the click event details to the background script or control panel
   if (recording) {
-    sendMessage('clickCaptured', target);
+    sendMessage('eventCaptured', target);
   }
 
 });
@@ -63,7 +63,7 @@ document.addEventListener('input', (event) => {
 
       // Optionally send the value to the background script
       if (recording) {
-        sendMessage('inputCaptured', target);
+        sendMessage('eventCaptured', target);
       }
     }, 1000); // Adjust delay as needed
   }
