@@ -43,7 +43,7 @@ document.addEventListener('click', (event) => {
 
   // Optionally send the click event details to the background script or control panel
   if (recording) {
-    sendMessage('eventCaptured', target);
+    sendMessage('eventCaptured', 'click', target);
   }
 
 });
@@ -63,7 +63,7 @@ document.addEventListener('input', (event) => {
 
       // Optionally send the value to the background script
       if (recording) {
-        sendMessage('eventCaptured', target);
+        sendMessage('eventCaptured', 'input', target);
       }
     }, 1000); // Adjust delay as needed
   }
@@ -74,7 +74,7 @@ document.addEventListener('input', (event) => {
 // ==============================
 
 
-function sendMessage(action, target) {
+function sendMessage(action, type, target) {
   const optimizedXPath = generateOptimizedXPath(target);
   const optimizedCSSSelector = generateOptimizedCSSSelector(target);
   let choosenValue = null;
@@ -90,20 +90,27 @@ function sendMessage(action, target) {
     choosenValue = target.value;
   }
 
+  const details = {
+    tagName: target.tagName,
+    name: target.name,
+    id: target.id,
+    classes: Array.from(target.classList),
+    textContent: target.textContent.trim(),
+    xpath: optimizedXPath,
+    cssSelector: optimizedCSSSelector,
+    nameSelector: optimizedNameSelector,
+    choosenValue: choosenValue,
+    value: target.value,
+  };
+
+  if (target.type === 'submit') {
+    details.tagType = 'submit';
+  }
+
   chrome.runtime.sendMessage({
     action: action,
-    details: {
-      tagName: target.tagName,
-      name: target.name,
-      id: target.id,
-      classes: Array.from(target.classList),
-      textContent: target.textContent.trim(),
-      xpath: optimizedXPath,
-      cssSelector: optimizedCSSSelector,
-      nameSelector: optimizedNameSelector,
-      choosenValue: choosenValue,
-      value: target.value,
-    },
+    type: type,
+    details: details,
   });
 }
 
