@@ -7,7 +7,7 @@ export function deleteCommand(index) {
   }
 }
 
-export function addCommand(command, event, uniqueName) {
+export function storeRobotCommand(command, event, uniqueName) {
   const index = commandQueue.push(command) - 1; // Add command to the queue and get the index
   console.log('Command added:', command);
 

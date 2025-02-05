@@ -1,6 +1,6 @@
 export const locatorStore = {}; // Stores events with unique IDs as top-level keys
 
-export function storeEvent(message) {
+export function storeTarget(message) {
   const { action, details } = message;
   const uniqueName = generateUniqueName(details);
 
@@ -18,6 +18,6 @@ export function storeEvent(message) {
 
 // Helper function to generate unique event names
 function generateUniqueName(details) {
-  return `${details.tagName}_${details.name || details.id || details.class}`;
+  return `${details.tagName}_${details.innerText || details.name || details.id || details.class}`;
 }
 

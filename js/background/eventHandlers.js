@@ -1,22 +1,23 @@
-import { deleteCommand, commandQueue } from './stores/CommandQueue.js';
-import { storeEvent, locatorStore } from './stores/LocatorStore.js';
+import { deleteCommand, commandQueue, storeRobotCommand } from './stores/CommandQueue.js';
+import { storeTarget, locatorStore } from './stores/LocatorStore.js';
 import { setRecordingStatus, recording } from './utils/RecordingStatus.js';
 import { sendStatus } from './utils/StatusSender.js';
-import { createClickCommand, createInputCommand } from './commands.js';
+import { RobotEventFactory } from './robotEvents/RobotEventFactory.js';
 
 export function handleMessage(message, sender) {
   switch (message.action) {
-    case 'clickCaptured':
-      storeEvent(message);
-      const clickCommand = createClickCommand(message);
-      sendStatus("Click captured");
-      return { command: clickCommand };
-
-    case 'inputCaptured':
-      storeEvent(message);
-      const inputCommand = createInputCommand(message);
-      sendStatus("Input captured");
-      return { command: inputCommand };
+    case 'eventCaptured':
+      let success = false;
+      let robotScript;
+      storeTarget(message);
+      const robotEvent = RobotEventFactory.createEvent(message);
+      if (robotEvent) {
+        robotScript = robotEvent.generateRobotInstructions();
+        storeRobotCommand(robotScript);
+        sendStatus("Event captured");
+        success = true;
+      }
+      return { success: success };
 
     case 'deleteCommand':
       deleteCommand(message.index);
