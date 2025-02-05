@@ -2,7 +2,7 @@
 export class RobotEvent {
   constructor(message) {
     this.details = message.details;
-    this.uniqueName = `${this.details.tagName}_${this.details.name || this.details.id || this.details.class}`;
+    this.uniqueName = `${this.details.tagName}_${this.details.innerText || this.details.name || this.details.id || this.details.class}`;
     this.locator = this.details.nameSelector ? `\${${this.uniqueName}.nameSelector}` : `\${${this.uniqueName}.cssSelector}`;
   }
   generateRobotInstructions() {

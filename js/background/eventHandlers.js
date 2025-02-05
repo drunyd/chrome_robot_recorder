@@ -1,5 +1,5 @@
 import { deleteCommand, commandQueue, storeRobotCommand } from './stores/CommandQueue.js';
-import { storeEvent, locatorStore } from './stores/LocatorStore.js';
+import { storeTarget, locatorStore } from './stores/LocatorStore.js';
 import { setRecordingStatus, recording } from './utils/RecordingStatus.js';
 import { sendStatus } from './utils/StatusSender.js';
 import { RobotEventFactory } from './robotEvents/RobotEventFactory.js';
@@ -9,7 +9,7 @@ export function handleMessage(message, sender) {
     case 'eventCaptured':
       let success = false;
       let robotScript;
-      storeEvent(message);
+      storeTarget(message);
       const robotEvent = RobotEventFactory.createEvent(message);
       if (robotEvent) {
         robotScript = robotEvent.generateRobotInstructions();

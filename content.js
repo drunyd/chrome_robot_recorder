@@ -46,7 +46,7 @@ document.addEventListener('click', (event) => {
     sendMessage('eventCaptured', 'click', target);
   }
 
-});
+}, true);
 
 let inputTimeout;
 
@@ -101,6 +101,7 @@ function sendMessage(action, type, target) {
     nameSelector: optimizedNameSelector,
     choosenValue: choosenValue,
     value: target.value,
+    innerText: target.innerText || null,
   };
 
   if (target.type === 'submit') {
